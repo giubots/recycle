@@ -18,14 +18,16 @@
 
 import 'package:flutter/material.dart';
 
-class RoundBottomAppBar extends StatelessWidget {
-  final Widget? title;
-  final List<Widget>? actions;
+class RoundBottomTabBar extends StatelessWidget {
+  final List<Widget> tabs;
+  final TabController? controller;
+  final ValueChanged<int>? onTap;
 
-  const RoundBottomAppBar({
+  const RoundBottomTabBar({
     Key? key,
-    this.actions,
-    this.title,
+    required this.tabs,
+    this.controller,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -40,9 +42,19 @@ class RoundBottomAppBar extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: Container(
           height: 50,
-          child: AppBar(
-            title: title,
-            actions: actions,
+          child: TabBar(
+            controller: controller,
+            tabs: tabs,
+            onTap: onTap,
+            labelColor: colorScheme.onSurface,
+            indicator: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: colorScheme.primary,
+                  width: 3,
+                ),
+              ),
+            ),
           ),
         ),
       ),
