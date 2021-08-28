@@ -30,8 +30,6 @@ class RoundBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
-
     return ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.elliptical(100, 3)),
       child: BottomAppBar(
