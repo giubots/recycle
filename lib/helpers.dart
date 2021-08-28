@@ -138,3 +138,18 @@ Future<bool> waitCondition(
 /// This functions returns a copy of [other] with time fields set to 0.
 DateTime removeTimeFrom(DateTime other) =>
     DateTime(other.year, other.month, other.day);
+
+Future<T?> pushFade<T>(BuildContext context, Widget child) {
+  return Navigator.push<T>(
+    context,
+    PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+    ),
+  );
+}
