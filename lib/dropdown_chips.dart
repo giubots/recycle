@@ -49,7 +49,10 @@ class DropdownAndChipsFormField<T> extends FormField<Set<T>> {
                       child: Text(nameBuilder(i)),
                     );
                   }).toList(),
-                  decoration: InputDecoration(labelText: labelText),
+                  decoration: InputDecoration(
+                    labelText: labelText,
+                    border: UnderlineInputBorder(borderSide: BorderSide.none),
+                  ),
                   onChanged: (value) async {
                     if (value == null) return;
                     field.value!.add(value);
