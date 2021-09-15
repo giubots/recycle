@@ -17,6 +17,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:recycle/helpers.dart';
 
 class TransitionButton extends StatelessWidget {
   final WidgetBuilder builder;
@@ -34,7 +35,7 @@ class TransitionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bColor = backgroundColor ?? Theme.of(context).colorScheme.surface;
+    var bColor = backgroundColor ?? Theme.of(context).colorScheme.background;
 
     var cContainer = Container(
       decoration: BoxDecoration(
@@ -55,26 +56,47 @@ class TransitionButton extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
+          IconButton(
+            icon: child,
+            onPressed: () => pushFade(context, _builder(context, bColor)),
+          ),
           Hero(
             tag: heroTag,
             child: ClipOval(child: cContainer),
-            flightShuttleBuilder: (_, __, flightDirection, ___, ____) =>
-                (flightDirection == HeroFlightDirection.push)
-                    ? rContainer
-                    : cContainer,
-          ),
-          IconButton(
-            icon: child,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: _builder),
-            ),
+            // flightShuttleBuilder: (
+            //   flightContext,
+            //   animation,
+            //   flightDirection,
+            //   fromHeroContext,
+            //   toHeroContext,
+            // ) =>
+            //     (flightDirection == HeroFlightDirection.push)
+            //         ? rContainer
+            //         : cContainer,
           ),
         ],
       ),
     );
   }
 
-  Widget _builder(BuildContext context) =>
-      Hero(tag: heroTag, child: Material(child: builder(context)));
+  Widget _builder(BuildContext context, Color bColor) {
+    return Stack(
+      children: [
+        Material(
+          child: Hero(
+            tag: heroTag,
+            child: ClipRRect(
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: bColor.withAlpha(0),
+                ),
+              ),
+            ),
+          ),
+        ),
+        builder(context),
+      ],
+    );
+  }
 }
