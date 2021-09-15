@@ -18,32 +18,55 @@
 
 import 'package:flutter/material.dart';
 
+const EmptyPadding = [const Padding(padding: const EdgeInsets.only(left: 50))];
+
 class RoundBottomAppBar extends StatelessWidget {
+  final Object heroTag;
   final Widget? title;
   final List<Widget>? actions;
 
-  const RoundBottomAppBar({
+  RoundBottomAppBar({
     Key? key,
-    this.actions,
+    this.heroTag = '<Default RoundBottomAppBar tag>',
+    List<Widget>? actions,
     this.title,
-  }) : super(key: key);
+  })  : actions = (title != null && (actions?.isEmpty ?? true))
+            ? EmptyPadding
+            : actions,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    final theme = Theme.of(context);
+    final tColor = theme.colorScheme.onPrimary;
+
+    var obj = ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.elliptical(100, 3)),
       child: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 5,
         clipBehavior: Clip.antiAlias,
-        child: Container(
-          height: 50,
-          child: AppBar(
-            title: title,
-            actions: actions,
-          ),
+        child: DefaultTextStyle(
+          style: theme.textTheme.headline6!.copyWith(color: tColor),
+          child: Container(
+              color: Theme.of(context).colorScheme.primary,
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const BackButton(),
+                  if (title != null) title!,
+                  if (actions != null) ...actions!,
+                ],
+              )),
         ),
       ),
+    );
+
+    return Hero(
+      tag: heroTag,
+      child: obj,
+      flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => Scaffold(bottomNavigationBar: obj),
     );
   }
 }

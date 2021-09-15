@@ -22,36 +22,41 @@ class RoundBottomTabBar extends StatelessWidget {
   final List<Widget> tabs;
   final TabController? controller;
   final ValueChanged<int>? onTap;
+  final Object heroTag;
 
   const RoundBottomTabBar({
     Key? key,
     required this.tabs,
     this.controller,
     this.onTap,
+    this.heroTag = '<Default RoundBottomTabBar tag>',
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
 
-    return ClipRRect(
-      borderRadius: BorderRadius.vertical(top: Radius.elliptical(100, 3)),
-      child: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 5,
-        clipBehavior: Clip.antiAlias,
-        child: Container(
-          height: 50,
-          child: TabBar(
-            controller: controller,
-            tabs: tabs,
-            onTap: onTap,
-            labelColor: colorScheme.onSurface,
-            indicator: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: colorScheme.primary,
-                  width: 3,
+    return Hero(
+      tag: heroTag,
+      child: ClipRRect(
+        borderRadius: BorderRadius.vertical(top: Radius.elliptical(100, 3)),
+        child: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          notchMargin: 5,
+          clipBehavior: Clip.antiAlias,
+          child: Container(
+            height: 50,
+            child: TabBar(
+              controller: controller,
+              tabs: tabs,
+              onTap: onTap,
+              labelColor: colorScheme.onSurface,
+              indicator: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: colorScheme.primary,
+                    width: 3,
+                  ),
                 ),
               ),
             ),
