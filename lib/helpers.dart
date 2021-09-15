@@ -139,17 +139,21 @@ Future<bool> waitCondition(
 DateTime removeTimeFrom(DateTime other) =>
     DateTime(other.year, other.month, other.day);
 
-Future<T?> pushFade<T>(BuildContext context, Widget child) {
+Future<T?> pushFade<T>(BuildContext context,
+    [Widget? child, PageRouteBuilder<T>? builder]) {
+  assert((child == null) != (builder == null),
+      'Provide child or builder, and not both');
   return Navigator.push<T>(
     context,
-    PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => child,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
-          opacity: animation,
-          child: child,
-        );
-      },
-    ),
+    builder ??
+        PageRouteBuilder<T>(
+          pageBuilder: (context, animation, secondaryAnimation) => child!,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
   );
 }
