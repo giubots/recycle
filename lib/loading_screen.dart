@@ -24,16 +24,16 @@ import 'package:recycle/types.dart';
 /// When the future is completed, this will call `runApp` and launch the widget
 /// returned by the [nextWidget] provider.
 /// This differs from a [FutureBuilder] in the fact that it uses `runApp`.
-class LoadingScreen extends StatelessWidget {
+class LoadingScreen<T> extends StatelessWidget {
   /// The widget that is shown while the [work] is not completed.
   /// By default it is a centered [CircularProgressIndicator].
   final Widget child;
 
   /// When this future completes, the [nextWidget] will be shown.
-  final Future work;
+  final Future<T> work;
 
   /// A function that returns the widget that will be shown on the future completion.
-  final WidgetProvider nextWidget;
+  final WidgetProvider<T> nextWidget;
 
   /// The theme of the loading page, defaults to light.
   final ThemeData? theme;
@@ -45,7 +45,7 @@ class LoadingScreen extends StatelessWidget {
     required this.nextWidget,
     this.theme,
   }) : super(key: key) {
-    work.then((_) => runApp(nextWidget()));
+    work.then((data) => runApp(nextWidget(data: data)));
   }
 
   @override

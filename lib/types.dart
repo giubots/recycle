@@ -18,8 +18,8 @@
 
 import 'package:flutter/material.dart';
 
-/// A function that returns a widget, does not use [BuildContext].
-typedef WidgetProvider<T> = Widget Function();
+/// A function that returns a widget, uses generics instead of a [BuildContext].
+typedef WidgetProvider<T> = Widget Function({T? data});
 
 /// A function that returns a boolean.
 typedef Condition = bool Function();
