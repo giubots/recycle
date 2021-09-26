@@ -16,6 +16,7 @@
  * this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 /// A container that shows its child in the center of the screen.
@@ -47,6 +48,7 @@ class ExpandableContainer extends StatefulWidget {
 
 class _ExpandableContainerState extends State<ExpandableContainer> {
   late Animation _animation;
+  var myChildSize = Size.zero;
 
   @override
   void initState() {
@@ -56,20 +58,54 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
     _animation.addListener(() => setState(() {}));
   }
 
-  @override
   Widget build(BuildContext context) {
-    final value = (_animation.value * 100).round() + 1;
-    return Center(
-      child: Column(
-        children: <Widget>[
-          Spacer(flex: value),
-          Expanded(
-            flex: 100,
-            child: widget.child,
-          ),
-          Spacer(flex: value),
-        ],
+    final sHeight = MediaQuery.of(context).size.height;
+    final pHeight = (sHeight - myChildSize.height) / 2;
+
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      s
+      child: MeasureSize(
+        onChange: (size) => setState(() => myChildSize = size),
+        child: widget.child,
       ),
     );
+  }
+}
+
+typedef void OnWidgetSizeChange(Size size);
+
+class MeasureSizeRenderObject extends RenderProxyBox {
+  Size oldSize = Size.zero;
+  final OnWidgetSizeChange onChange;
+
+  MeasureSizeRenderObject(this.onChange);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    Size newSize = child?.size ?? oldSize;
+    if (oldSize == newSize) return;
+
+    oldSize = newSize;
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      onChange(newSize);
+    });
+  }
+}
+
+class MeasureSize extends SingleChildRenderObjectWidget {
+  final OnWidgetSizeChange onChange;
+
+  const MeasureSize({
+    Key? key,
+    required this.onChange,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return MeasureSizeRenderObject(onChange);
   }
 }

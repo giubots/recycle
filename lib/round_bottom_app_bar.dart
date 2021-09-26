@@ -39,6 +39,7 @@ class RoundBottomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tColor = theme.colorScheme.onPrimary;
+    final iconTheme = IconThemeData(color: tColor);
 
     var obj = ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.elliptical(100, 3)),
@@ -49,16 +50,20 @@ class RoundBottomAppBar extends StatelessWidget {
         child: DefaultTextStyle(
           style: theme.textTheme.headline6!.copyWith(color: tColor),
           child: Container(
-              color: Theme.of(context).colorScheme.primary,
-              height: 50,
+            color: Theme.of(context).colorScheme.primary,
+            height: 50,
+            child: IconTheme(
+              data: iconTheme,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const BackButton(),
+                  if (ModalRoute.of(context)?.canPop ?? false) BackButton(),
                   if (title != null) title!,
                   if (actions != null) ...actions!,
                 ],
-              )),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -66,7 +71,9 @@ class RoundBottomAppBar extends StatelessWidget {
     return Hero(
       tag: heroTag,
       child: obj,
-      flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => Scaffold(bottomNavigationBar: obj),
+      flightShuttleBuilder: (flightContext, animation, flightDirection,
+              fromHeroContext, toHeroContext) =>
+          Scaffold(bottomNavigationBar: obj),
     );
   }
 }
