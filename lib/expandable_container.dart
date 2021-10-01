@@ -64,7 +64,6 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
 
     return AnimatedContainer(
       duration: Duration(seconds: 1),
-      s
       child: MeasureSize(
         onChange: (size) => setState(() => myChildSize = size),
         child: widget.child,
