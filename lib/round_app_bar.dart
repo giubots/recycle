@@ -20,16 +20,23 @@ import 'package:flutter/material.dart';
 
 /// A rounded AppBar with a centered [title] string and optional [actions].
 class RoundAppBar extends AppBar {
-  RoundAppBar({Key? key, String? title, List<Widget>? actions})
-      : super(
+  RoundAppBar({
+    Key? key,
+    @Deprecated('Use titleStr instead') String? title,
+    String? titleStr,
+    Widget? child,
+    List<Widget>? actions,
+  })  : assert(titleStr == null || child == null,
+            'Provide titleStr OR child, not both'),
+        super(
           key: key,
           shape: const RoundedRectangleBorder(
             borderRadius: const BorderRadius.vertical(
               bottom: const Radius.elliptical(1000, 25),
             ),
           ),
-          centerTitle: true,
-          title: Text(title ?? ''),
+          centerTitle: actions?.isEmpty,
+          title: child ?? Text(title ?? ''),
           actions: actions,
         );
 }
